@@ -1,2 +1,2 @@
 # RecommSystemWithRL
-Movie Recommendation system with Reinforcement learning.
+Music Recommendation system with Contextual Multi-Armed Bandit.

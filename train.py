@@ -9,20 +9,16 @@ def main():
     features = preprocess_fast(data)
     
 
-    # Initialize your LinUCB model
+    # Initialize the LinUCB model
     num_actions = len(features)
     num_features = features.shape[1]
-    alpha = 0.9  # You can adjust this value based on your needs
+    alpha = 0.9
     linucb_model = LinUCB(num_actions=num_actions, num_features=num_features, alpha=alpha)
     chosen_action = randrange(num_actions)
 
     # Online training loop
     while True:
         title, context = get_next_song_context(data, features, chosen_action)
-        
-        # if context is None:
-        #     # Exit the loop when there are no more songs
-        #     break
 
         chosen_action = linucb_model.choose_action(context)
 

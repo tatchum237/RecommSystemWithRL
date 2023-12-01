@@ -24,7 +24,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from fake_useragent import UserAgent
 from urllib.parse import unquote
-import time 
+import time
+
+import h5py
+ 
 
 
 
@@ -62,27 +65,48 @@ def preprocess_fast(data):
     features = data.iloc[:, 1:] 
     return features
     
+
 def preprocess_without_title(data):
-    
-    # Separate columns into decades and genres
-    decade_columns = data.columns[1:6]
-    genre_columns = data.columns[6:]
+    features_file = "data/features_without_title.h5"
 
-    # Apply PCA for dimensionality reduction on decades
-    pca_decades = PCA(n_components=2)
-    reduced_decades = pd.DataFrame(pca_decades.fit_transform(data[decade_columns]), columns=['PCA_Decade1', 'PCA_Decade2'])
+    # Check if the preprocessed features file already exists
+    if os.path.exists(features_file):
+        print("Loading preprocessed features without title from file.")
+        features = pd.read_hdf(features_file)
+        return features
+    else:
+        print("Preprocessing features without title.")
 
-    # Derive vector embeddings of one-hot encoded genres
-    genres = pd.DataFrame(data[genre_columns].eq(1, axis=0).idxmax(axis=1))
-    genre_embeddings = embed_genre_columns(genres)
-    
-    # Concatenate reduced decades and genre embeddings
-    features = pd.concat([reduced_decades, genre_embeddings], axis=1)
-    
-    return features
+        # Separate columns into decades and genres
+        decade_columns = data.columns[1:6]
+        genre_columns = data.columns[6:]
 
-    
+        # Apply PCA for dimensionality reduction on decades
+        pca_decades = PCA(n_components=2)
+        reduced_decades = pd.DataFrame(pca_decades.fit_transform(data[decade_columns]), columns=['PCA_Decade1', 'PCA_Decade2'])
+
+        # Derive vector embeddings of one-hot encoded genres
+        genres = pd.DataFrame(data[genre_columns].eq(1, axis=0).idxmax(axis=1))
+        genre_embeddings = embed_genre_columns(genres)
+
+        # Concatenate reduced decades and genre embeddings
+        features = pd.concat([reduced_decades, genre_embeddings], axis=1)
+
+        # Save the preprocessed features to an HDF5 file
+        features.to_hdf(features_file, key='data', mode='w', complevel=1, complib='zlib', format='table')
+        
+        return features
+
+
+
 def preprocess_with_title(data):
+    features_file = "data/features_with_title.h5"
+
+    # Check if 'features_with_title.h5' already exists
+    if os.path.exists(features_file):
+        print("Loading features_with_title.h5...")
+        features = pd.read_hdf(features_file, key='data')
+        return features
 
     # Separate columns into decades and genres
     decade_columns = data.columns[1:6]
@@ -121,6 +145,10 @@ def preprocess_with_title(data):
 
     # Concatenate the reduced features, title embeddings, and original DataFrame
     features = pd.concat([reduced_decades, reduced_genres, title_embeddings_df], axis=1)
+
+    # Save the DataFrame to an HDF5 file
+    features.to_hdf(features_file, key='data', mode='w', complevel=1, complib='zlib', format='table')
+    print(f"Features saved to {features_file}")
 
     return features
 

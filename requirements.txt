@@ -1,0 +1,17 @@
+aiotube==1.7.2
+beautifulsoup4==4.11.1
+fake_useragent==1.4.0
+google_api_python_client==2.108.0
+h5py==3.8.0
+ipython==8.4.0
+ipywidgets==8.1.1
+numpy==1.24.4
+pandas==2.0.3
+python-dotenv==1.0.0
+Requests==2.31.0
+scikit_learn==1.1.2
+selenium==4.15.2
+spacy==3.7.2
+tensorflow==2.15.0
+tensorflow_intel==2.15.0
+yaspin==3.0.1

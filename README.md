@@ -74,13 +74,13 @@ In this project, we provide alternative preprocessing functions within `utils.py
 
 ### Preprocessing Functions
 
-1. **Preprocess without Title (`preprocess_fast`):**
+1. **Fast Preprocessing (`preprocess_fast`):**
    This function focuses on a basic preprocessing approach without incorporating embeddings for song titles. It efficiently extracts features from the available data as-is, only omitting the titles.
 
-2. **Preprocess without Title and Genre (`preprocess_without_title`):**
+2. **Preprocessing without Title (`preprocess_without_title`):**
    This function extends the preprocessing by still excluding song titles but including genre embeddings. It leverages PCA for dimensionality reduction on decades, providing a simplified feature set.
 
-3. **Preprocess with Title (`preprocess_with_title`):**
+3. **Preprocessing with Title (`preprocess_with_title`):**
    In contrast, this function incorporates embeddings for song titles using techniques such as tokenization, padding, and averaging word embeddings but ignores genre embeddings. It also includes PCA for both decades and genres, providing a comprehensive feature set that captures title-related information.
 
 Except for the first preprocessing function, the feature vectors generated are cached in the HDF5 files `features_with_title.h5` and  `features_without_title.h5`, in order to trade CPU usage for I/O during the preprocessing phase.
